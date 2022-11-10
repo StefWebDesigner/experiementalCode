@@ -3,6 +3,8 @@ package com.coder.jdbcpractice.user;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserDataAccessService implements UserDTO {
 
@@ -11,10 +13,7 @@ public class UserDataAccessService implements UserDTO {
     public UserDataAccessService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-
-
-
+    
     public User saveUserDetails(User user){
 
         //sql stuff
@@ -25,9 +24,10 @@ public class UserDataAccessService implements UserDTO {
         );
 
         String stuff =
-                "SELECT ID, USERNAME, PASSWORD, EMAIL FROM UserTable WHERE ID = ?";
-        return (User) jdbcTemplate.query(stuff, new UserRowMapper());
-
+                "SELECT ID, USERNAME, PASSWORD, EMAIL FROM UserTable WHERE EMAIL = '" + user.getEMAIL() + "';" ;
+        List<User> users=(List<User>) jdbcTemplate.query(stuff, new UserRowMapper());
+        User myUser= users.stream().findFirst().get();
+        return myUser;
 
     }
 
